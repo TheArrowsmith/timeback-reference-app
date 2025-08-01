@@ -1,21 +1,81 @@
-## Uploading data
+# QTI Assessment Test Viewer
 
-1. Login and get an access token.
-2. Store it in an env var called `JWT_TOKEN`
-3. run `./data/qti/upload_quiz.sh` - this will upload a quiz with two questions. Make a note of its ID.
-4. run `./data/oneroster/create_data.sh` - this will upload some OneRoster data about a school with classes, courses etc..
+This Next.js application loads and renders QTI assessment tests from the TimeBack API.
 
-Note that the above two scripts assume that you're running the API locally on `localhost:8080`. You can override this by setting a `DOMAIN` env var.
+## Features
 
-## Viewing the reference app.
+- Loads QTI assessmentTest data from the TimeBack API (localhost:8080)
+- Renders test structure with parts and sections
+- Displays multiple choice questions with radio buttons
+- Displays text entry questions with input fields
+- Basic XML parsing and rendering (full TAO Item Runner integration ready)
+- Responsive design with Tailwind CSS and ShadCN UI components
 
-1. `cd timeback-reference`
-2. Open `/src/lib/config.ts` and update `JWT_TOKEN` with your token.
-3. Run `npm install` and start the server with `npm run dev`
-4. Visit `http://localhost:3000/assessment/<quiz-id>` with the quiz ID you noted above. You’ll see the quiz rendered.
-5. Visit `http://localhost:3000/oneroster` to see the oneroster data.
+## Getting Started
 
-## KNOWN ISSUES
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-- We need to add some actual auth instead of hardcoding the JWT
-- The quiz question data retrieved from the API doesn’t include the actual answers to the multiple choice question. I’m not sure if that’s because the script didn’t upload it in the first place or if it’s being stored but not retrieved - haven’t had time to check. If you look in the code you’ll see that Claude “fixed” this by hardcoding the missing XML directly into the `qti-client` module. This at least means we can see what the UI will look like. I’ll figure out how to actually retrieve the data tomorrow.
+2. **Configure API access:**
+   - Open `src/lib/api/qti-client.ts`
+   - Replace `YOUR_JWT_TOKEN_HERE` with your actual JWT token
+   - Ensure the API is running at `http://localhost:8080`
+
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open the application:**
+   - Navigate to [http://localhost:3000](http://localhost:3000)
+   - Click "View Sample Assessment" or go directly to `/assessment/[YOUR-TEST-ID]`
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── assessment/[id]/page.tsx  # Dynamic assessment page
+│   └── page.tsx                  # Home page
+├── components/
+│   ├── qti/
+│   │   └── QTIItem.tsx          # QTI item renderer component
+│   └── ui/                      # ShadCN UI components
+└── lib/
+    ├── api/
+    │   └── qti-client.ts        # API client functions
+    └── utils.ts                 # Utility functions
+```
+
+## API Integration
+
+The application follows the three-step process outlined in the QTI API documentation:
+
+1. **Fetch Test Hierarchy** - Gets the complete structure of the test
+2. **Fetch Item Details** - Retrieves metadata for each assessment item
+3. **Download Item XML** - Fetches the actual XML content for rendering
+
+## Current Implementation
+
+- Basic XML parsing and rendering for multiple choice and text entry questions
+- The full TAO Item Runner QTI package is installed and ready for integration
+- Questions are displayed in a read-only format (no submission functionality)
+
+## Technologies Used
+
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **ShadCN UI** - Beautifully designed components
+- **@oat-sa/tao-item-runner-qti** - TAO QTI Item Runner (ready for full integration)
+
+## Next Steps
+
+To fully integrate the TAO Item Runner:
+1. Initialize the TAO Item Runner with the XML content
+2. Replace the basic rendering with the full TAO rendering engine
+3. Add response handling and submission functionality
+4. Implement navigation between questions
+5. Add timer and progress tracking features
