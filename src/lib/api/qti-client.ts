@@ -37,6 +37,53 @@ interface TestPartsResponse {
   testParts: TestPart[];
 }
 
+interface AssessmentTest {
+  id: string;
+  identifier: string;
+  title: string;
+  testPartCount: number;
+  itemCount: number;
+  language: string;
+  toolName?: string;
+  toolVersion?: string;
+  duration?: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface AssessmentTestsResponse {
+  tests: AssessmentTest[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
+  };
+}
+
+export async function fetchAssessmentTests(limit: number = 100, offset: number = 0): Promise<AssessmentTestsResponse> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
+  const response = await fetch(
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests?limit=${limit}&offset=${offset}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch assessment tests: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 export async function fetchTestHierarchy(testId: string): Promise<TestPartsResponse> {
   const token = getAuthToken();
   if (!token) {

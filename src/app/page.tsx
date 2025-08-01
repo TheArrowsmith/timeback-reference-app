@@ -43,9 +43,9 @@ export default function Home() {
                 free text response, and other interaction types.
               </p>
               <div className="flex gap-2">
-                <Link href="/assessment/yJz5CMDznRfl">
+                <Link href="/assessment">
                   <Button>
-                    View Sample Assessment
+                    View Assessments
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
