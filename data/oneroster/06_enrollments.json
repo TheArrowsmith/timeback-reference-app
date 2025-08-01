@@ -1,0 +1,97 @@
+{
+  "enrollments": [
+    {
+      "sourcedId": "enrollment-teacher-001",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "role": "teacher",
+      "primary": true,
+      "beginDate": "2025-06-01",
+      "endDate": "2025-08-31",
+      "user": {
+        "href": "/users/user-teacher-001",
+        "sourcedId": "user-teacher-001",
+        "type": "user"
+      },
+      "class": {
+        "href": "/classes/class-ai-freshmen-001", 
+        "sourcedId": "class-ai-freshmen-001",
+        "type": "class"
+      },
+      "school": {
+        "href": "/orgs/org-omega-001",
+        "sourcedId": "org-omega-001",
+        "type": "org"
+      }
+    },
+    {
+      "sourcedId": "enrollment-student-001",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "role": "student",
+      "beginDate": "2025-06-01",
+      "endDate": "2025-08-31", 
+      "user": {
+        "href": "/users/user-student-001",
+        "sourcedId": "user-student-001",
+        "type": "user"
+      },
+      "class": {
+        "href": "/classes/class-ai-freshmen-001",
+        "sourcedId": "class-ai-freshmen-001", 
+        "type": "class"
+      },
+      "school": {
+        "href": "/orgs/org-omega-001",
+        "sourcedId": "org-omega-001",
+        "type": "org"
+      }
+    },
+    {
+      "sourcedId": "enrollment-student-002",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "role": "student",
+      "beginDate": "2025-06-01",
+      "endDate": "2025-08-31",
+      "user": {
+        "href": "/users/user-student-002",
+        "sourcedId": "user-student-002",
+        "type": "user"
+      },
+      "class": {
+        "href": "/classes/class-ai-freshmen-001",
+        "sourcedId": "class-ai-freshmen-001",
+        "type": "class"
+      },
+      "school": {
+        "href": "/orgs/org-omega-001",
+        "sourcedId": "org-omega-001",
+        "type": "org"
+      }
+    },
+    {
+      "sourcedId": "enrollment-student-003",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "role": "student", 
+      "beginDate": "2025-06-01",
+      "endDate": "2025-08-31",
+      "user": {
+        "href": "/users/user-student-003",
+        "sourcedId": "user-student-003",
+        "type": "user"
+      },
+      "class": {
+        "href": "/classes/class-ai-freshmen-001",
+        "sourcedId": "class-ai-freshmen-001",
+        "type": "class"
+      },
+      "school": {
+        "href": "/orgs/org-omega-001",
+        "sourcedId": "org-omega-001",
+        "type": "org"
+      }
+    }
+  ]
+}

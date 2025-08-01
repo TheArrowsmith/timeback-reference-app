@@ -1,0 +1,31 @@
+{
+  "classes": [
+    {
+      "sourcedId": "class-ai-freshmen-001",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "title": "AI Freshmen",
+      "classCode": "AIDEV101-A",
+      "classType": "scheduled",
+      "grades": ["9"],
+      "subjects": ["Computer Science"],
+      "course": {
+        "href": "/courses/course-ai-dev-001",
+        "sourcedId": "course-ai-dev-001",
+        "type": "course"
+      },
+      "school": {
+        "href": "/orgs/org-omega-001",
+        "sourcedId": "org-omega-001", 
+        "type": "org"
+      },
+      "terms": [
+        {
+          "href": "/academicSessions/term-summer-2025",
+          "sourcedId": "term-summer-2025",
+          "type": "academicSession"
+        }
+      ]
+    }
+  ]
+}

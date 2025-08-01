@@ -1,0 +1,84 @@
+{
+  "users": [
+    {
+      "sourcedId": "user-teacher-001",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "username": "chad.gptee@omega.edu",
+      "enabledUser": true,
+      "givenName": "Chad",
+      "familyName": "Tee",
+      "middleName": "G.P.",
+      "role": "teacher",
+      "identifier": "T001",
+      "email": "chad.gptee@omega.edu",
+      "orgs": [
+        {
+          "href": "/orgs/org-omega-001",
+          "sourcedId": "org-omega-001",
+          "type": "org"
+        }
+      ]
+    },
+    {
+      "sourcedId": "user-student-001", 
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "username": "bill.student@omega.edu",
+      "enabledUser": true,
+      "givenName": "Bill",
+      "familyName": "Student",
+      "role": "student",
+      "identifier": "S001",
+      "email": "bill.student@omega.edu",
+      "grades": ["9"],
+      "orgs": [
+        {
+          "href": "/orgs/org-omega-001",
+          "sourcedId": "org-omega-001",
+          "type": "org"
+        }
+      ]
+    },
+    {
+      "sourcedId": "user-student-002",
+      "status": "active", 
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "username": "bob.student@omega.edu",
+      "enabledUser": true,
+      "givenName": "Bob",
+      "familyName": "Student", 
+      "role": "student",
+      "identifier": "S002",
+      "email": "bob.student@omega.edu",
+      "grades": ["9"],
+      "orgs": [
+        {
+          "href": "/orgs/org-omega-001",
+          "sourcedId": "org-omega-001",
+          "type": "org"
+        }
+      ]
+    },
+    {
+      "sourcedId": "user-student-003",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z", 
+      "username": "ben.student@omega.edu",
+      "enabledUser": true,
+      "givenName": "Ben",
+      "familyName": "Student",
+      "role": "student", 
+      "identifier": "S003",
+      "email": "ben.student@omega.edu",
+      "grades": ["9"],
+      "orgs": [
+        {
+          "href": "/orgs/org-omega-001",
+          "sourcedId": "org-omega-001",
+          "type": "org"
+        }
+      ]
+    }
+  ]
+}

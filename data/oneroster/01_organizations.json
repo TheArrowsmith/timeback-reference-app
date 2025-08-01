@@ -1,0 +1,12 @@
+{
+  "organizations": [
+    {
+      "sourcedId": "org-omega-001",
+      "status": "active",
+      "dateLastModified": "2025-07-31T10:00:00.000Z",
+      "name": "Omega School",
+      "type": "school",
+      "identifier": "OMEGA-HS-001"
+    }
+  ]
+}
