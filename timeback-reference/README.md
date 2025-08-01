@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QTI Assessment Test Viewer
+
+This Next.js application loads and renders QTI assessment tests from the TimeBack API.
+
+## Features
+
+- Loads QTI assessmentTest data from the TimeBack API (localhost:8080)
+- Renders test structure with parts and sections
+- Displays multiple choice questions with radio buttons
+- Displays text entry questions with input fields
+- Basic XML parsing and rendering (full TAO Item Runner integration ready)
+- Responsive design with Tailwind CSS and ShadCN UI components
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+2. **Configure API access:**
+   - Open `src/lib/api/qti-client.ts`
+   - Replace `YOUR_JWT_TOKEN_HERE` with your actual JWT token
+   - Ensure the API is running at `http://localhost:8080`
+
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open the application:**
+   - Navigate to [http://localhost:3000](http://localhost:3000)
+   - Click "View Sample Assessment" or go directly to `/assessment/[YOUR-TEST-ID]`
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── assessment/[id]/page.tsx  # Dynamic assessment page
+│   └── page.tsx                  # Home page
+├── components/
+│   ├── qti/
+│   │   └── QTIItem.tsx          # QTI item renderer component
+│   └── ui/                      # ShadCN UI components
+└── lib/
+    ├── api/
+    │   └── qti-client.ts        # API client functions
+    └── utils.ts                 # Utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Integration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application follows the three-step process outlined in the QTI API documentation:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Fetch Test Hierarchy** - Gets the complete structure of the test
+2. **Fetch Item Details** - Retrieves metadata for each assessment item
+3. **Download Item XML** - Fetches the actual XML content for rendering
 
-## Learn More
+## Current Implementation
 
-To learn more about Next.js, take a look at the following resources:
+- Basic XML parsing and rendering for multiple choice and text entry questions
+- The full TAO Item Runner QTI package is installed and ready for integration
+- Questions are displayed in a read-only format (no submission functionality)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **ShadCN UI** - Beautifully designed components
+- **@oat-sa/tao-item-runner-qti** - TAO QTI Item Runner (ready for full integration)
 
-## Deploy on Vercel
+## Next Steps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To fully integrate the TAO Item Runner:
+1. Initialize the TAO Item Runner with the XML content
+2. Replace the basic rendering with the full TAO rendering engine
+3. Add response handling and submission functionality
+4. Implement navigation between questions
+5. Add timer and progress tracking features
