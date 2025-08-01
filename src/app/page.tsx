@@ -6,6 +6,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { useAuth } from "@/lib/auth/context";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Users } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   const { user } = useAuth();
@@ -19,7 +20,10 @@ export default function Home() {
             <h1 className="text-2xl font-bold">TimeBack Reference App</h1>
             <p className="text-sm text-muted-foreground">Welcome, {user?.email}</p>
           </div>
-          <LogoutButton />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LogoutButton />
+          </div>
         </div>
       </header>
 
