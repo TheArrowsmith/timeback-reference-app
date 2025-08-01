@@ -1,5 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080';
-const JWT_TOKEN = 'eyJraWQiOiJ5cXBIUStxbHFEOVluRWxUdEd4bUhmYkJ2MWpBMlBYc0llXC91RWowaUtidz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxNDI4OTQ1OC1mMGMxLTcwNTMtODAwMC0yODk0ZWE2ZDNhMDEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9PcWVmRk13bFAiLCJjbGllbnRfaWQiOiIxY2g1N2I5a2FmZmx0bDk1ZTJvYXRqZ2htbCIsIm9yaWdpbl9qdGkiOiJkNDY5MjY5MC1hMmM2LTRmMzktYTczZi02MjI5Y2U1OGQ4ZDEiLCJldmVudF9pZCI6ImJlMGFiNGVkLTA2OTItNDczNi1hNTU5LTRiM2ViNTU2MTM3MSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NTQwMDczMTIsImV4cCI6MTc1NDAxMDkxMiwiaWF0IjoxNzU0MDA3MzEyLCJqdGkiOiJlZTc0NmRiNS01NmM4LTQyYmUtOGJkZC0wMTdlMDc1OGQ1MGUiLCJ1c2VybmFtZSI6IjE0Mjg5NDU4LWYwYzEtNzA1My04MDAwLTI4OTRlYTZkM2EwMSJ9.Qn3xuMSbJ08ypsCBWXOmpQ5InHk8EgVV5Ut3vApyJ8ub0Gqz0vC_4qFu03_dqYgBVe6cJToUmbyNpFdrws_RBgCRTuj-6RGw37scHeR17kcIhGIvPFeSXqW37om6vcWoGRaXkpOahaz--No0bFT878IMZK4MrfQeN-kM_pqGvCdo_vxhoTUzO8irWFpdFjuET-dQU7phsqItQJfc0EryTvRqh8CjKnqf67xokAkPKrqFL595hm5pvCn_Z6DDwmhQuQTwT6NJTpcmxYWp5WJlEF0Fcw_pVsNYUcgTtP8Yoaj9FnPVmRE2XER6oatfFYc5MN8RkGOK1cF_JfTDN_NbbQ';
+import { API_CONFIG } from '@/lib/config';
 
 interface TestPart {
   id: string;
@@ -39,10 +38,10 @@ interface TestPartsResponse {
 
 export async function fetchTestHierarchy(testId: string): Promise<TestPartsResponse> {
   const response = await fetch(
-    `${API_BASE_URL}/ims/qti/v3p0/assessment-tests/${testId}/test-parts`,
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests/${testId}/test-parts`,
     {
       headers: {
-        'Authorization': `Bearer ${JWT_TOKEN}`,
+        'Authorization': `Bearer ${API_CONFIG.JWT_TOKEN}`,
       },
     }
   );
@@ -57,10 +56,10 @@ export async function fetchTestHierarchy(testId: string): Promise<TestPartsRespo
 export async function fetchItemDetails(itemId: string): Promise<ItemDetails> {
   console.log('Fetching item details for:', itemId);
   const response = await fetch(
-    `${API_BASE_URL}/ims/qti/v3p0/assessment-items/${itemId}`,
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-items/${itemId}`,
     {
       headers: {
-        'Authorization': `Bearer ${JWT_TOKEN}`,
+        'Authorization': `Bearer ${API_CONFIG.JWT_TOKEN}`,
       },
     }
   );
