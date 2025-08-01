@@ -13,55 +13,78 @@ This Next.js application loads and renders QTI assessment tests from the TimeBac
 
 ## Getting Started
 
+The app is currently READ ONLY. It has a UI for you to pull and view data from TimeBack, but it doesn't provide a way to create or update Timeback data.
+
+If you're running a local copy of TimeBack you'll need to add data
+
+### Step 1: set up the backend and register
+
+1. Clone the Timeback repo (it's a separate, private repository — ask AJ to add you)
+2. Follow the instructions in that repo to set the app up.
+2. Create an account and login:
+
+    ```bash
+    # run this within the Timeback repo, not the reference app repo.
+    bun auth-helper.ts register test@example.com TestPassword123! 'Test User'
+
+    # Check your email for the confirmation code:
+    bun auth-helper.ts confirm test@example.com 123456
+
+    # Login as the user you just created:
+    bun auth-helper.ts login test@example.com TestPassword123!
+    ```
+
+    This creates a user on Superbuilders' AWS Cognito pool.
+
+    If the login command (`bun auth-helper.ts login …`) is successful, it will print an access token and also save it to `.auth-token`. You'll need this later.
+
+3. Follow the instructions in the Timeback repo to start its server, which runs on `localhost:8080` by default.
+
+### Step 2: add sample data to the backend
+
+Back in the reference app repo:
+
+1. Take your auth token from step 1 and save it as an env var `JWT_TOKEN`:
+
+    ```bash
+    export JWT_TOKEN=<your-token>
+    ```
+
+2. Run these scripts to add sample QTI and OneRoster data:
+
+    ```bash
+    data/oneroster/create_data.sh
+    data/qti/upload_quiz.sh
+    ```
+
+To be clear: this only adds the data to your local copy of Timeback.
+
+### Step 3: view data in the sample app
+
 1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
 
-2. **Configure API access:**
-   - Open `src/lib/api/qti-client.ts`
-   - Replace `YOUR_JWT_TOKEN_HERE` with your actual JWT token
-   - Ensure the API is running at `http://localhost:8080`
+    ```bash
+    bun install
+    ```
 
-3. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+2. **Run the development server:**
 
-4. **Open the application:**
-   - Navigate to [http://localhost:3000](http://localhost:3000)
-   - Click "View Sample Assessment" or go directly to `/assessment/[YOUR-TEST-ID]`
+    ```bash
+    bun run dev
+    ```
 
-## Project Structure
+3. **Open the application:**
+    - Navigate to [http://localhost:3000](http://localhost:3000)
+    - Log in using the authentication form
+    - Click the links to view assessments (QTI) or OneRoster data
 
-```
-src/
-├── app/
-│   ├── assessment/[id]/page.tsx  # Dynamic assessment page
-│   └── page.tsx                  # Home page
-├── components/
-│   ├── qti/
-│   │   └── QTIItem.tsx          # QTI item renderer component
-│   └── ui/                      # ShadCN UI components
-└── lib/
-    ├── api/
-    │   └── qti-client.ts        # API client functions
-    └── utils.ts                 # Utility functions
-```
+## QTI
 
-## API Integration
+The application supports loading and rendering QTI (Question and Test Interoperability) assessments. It connects to the TimeBack API to fetch assessment data, including test hierarchies, item metadata, and XML content. The system parses QTI XML to display multiple choice and text entry questions in a user-friendly format.
 
-The application follows the three-step process outlined in the QTI API documentation:
+## OneRoster
 
-1. **Fetch Test Hierarchy** - Gets the complete structure of the test
-2. **Fetch Item Details** - Retrieves metadata for each assessment item
-3. **Download Item XML** - Fetches the actual XML content for rendering
-
-## Current Implementation
-
-- Basic XML parsing and rendering for multiple choice and text entry questions
-- The full TAO Item Runner QTI package is installed and ready for integration
-- Questions are displayed in a read-only format (no submission functionality)
+The application includes OneRoster integration for managing educational data. It supports viewing organizations, academic sessions, courses, classes, users, and enrollments through the TimeBack API's OneRoster endpoints.
 
 ## Technologies Used
 
@@ -70,12 +93,3 @@ The application follows the three-step process outlined in the QTI API documenta
 - **Tailwind CSS v4** - Utility-first CSS framework
 - **ShadCN UI** - Beautifully designed components
 - **@oat-sa/tao-item-runner-qti** - TAO QTI Item Runner (ready for full integration)
-
-## Next Steps
-
-To fully integrate the TAO Item Runner:
-1. Initialize the TAO Item Runner with the XML content
-2. Replace the basic rendering with the full TAO rendering engine
-3. Add response handling and submission functionality
-4. Implement navigation between questions
-5. Add timer and progress tracking features
