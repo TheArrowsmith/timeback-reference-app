@@ -1,4 +1,5 @@
 import { API_CONFIG } from '@/lib/config';
+import { getAuthToken } from '@/lib/auth/sso';
 
 const ONEROSTER_BASE_URL = `${API_CONFIG.BASE_URL}${API_CONFIG.ONEROSTER_BASE_PATH}`;
 
@@ -160,12 +161,19 @@ interface EnrollmentResponse {
 }
 
 // Common fetch options
-const getFetchOptions = (): RequestInit => ({
-  headers: {
-    'Authorization': `Bearer ${API_CONFIG.JWT_TOKEN}`,
-    'Accept': 'application/json',
-  },
-});
+const getFetchOptions = (): RequestInit => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+  
+  return {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+    },
+  };
+};
 
 // Error handling
 class OneRosterError extends Error {

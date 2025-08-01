@@ -1,43 +1,104 @@
+'use client';
+
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { useAuth } from "@/lib/auth/context";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, BookOpen, Users } from "lucide-react";
 
 export default function Home() {
+  const { user } = useAuth();
+  
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">QTI Assessment Viewer</h1>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Welcome to the QTI Assessment Test Viewer</CardTitle>
-          <CardDescription>
-            This application loads and renders QTI assessment tests from the TimeBack API
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-4">
-            Click the link below to view a sample assessment test. You can replace the ID in the URL
-            with any valid assessment test ID.
-          </p>
-          
-          <Link 
-            href="/assessment/yJz5CMDznRfl" 
-            className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow transition-colors"
-            style={{
-              backgroundColor: 'hsl(var(--primary))',
-              color: 'hsl(var(--primary-foreground))'
-            }}
-          >
-            View Sample Assessment
-          </Link>
-          
-          <div className="mt-6 p-4 rounded-lg" style={{backgroundColor: 'hsl(var(--muted))'}}>
-            <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>
-              <strong>Note:</strong> Make sure the API is running at <code>localhost:8080</code> and 
-              update the JWT token in <code>src/lib/api/qti-client.ts</code> before testing.
-            </p>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">TimeBack Reference App</h1>
+            <p className="text-sm text-muted-foreground">Welcome, {user?.email}</p>
           </div>
-        </CardContent>
-      </Card>
+          <LogoutButton />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* QTI Assessment Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                <CardTitle>QTI Assessments</CardTitle>
+              </div>
+              <CardDescription>
+                Create, manage, and view QTI assessment tests
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                View and interact with QTI 3.0 assessment items including multiple choice, 
+                free text response, and other interaction types.
+              </p>
+              <div className="flex gap-2">
+                <Link href="/assessment/yJz5CMDznRfl">
+                  <Button>
+                    View Sample Assessment
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* OneRoster Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                <CardTitle>OneRoster Management</CardTitle>
+              </div>
+              <CardDescription>
+                Manage organizations, users, classes, and enrollments
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Full CRUD operations for OneRoster entities including organizations, 
+                academic sessions, courses, classes, users, and enrollments.
+              </p>
+              <div className="flex gap-2">
+                <Link href="/oneroster">
+                  <Button>
+                    Open OneRoster Dashboard
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* API Status Section */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>API Configuration</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <span className="text-sm">Connected to API at http://localhost:8080</span>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Authenticated as: {user?.role || 'user'}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
     </div>
   );
 }

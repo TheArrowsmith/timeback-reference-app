@@ -1,4 +1,5 @@
 import { API_CONFIG } from '@/lib/config';
+import { getAuthToken } from '@/lib/auth/sso';
 
 interface TestPart {
   id: string;
@@ -37,11 +38,16 @@ interface TestPartsResponse {
 }
 
 export async function fetchTestHierarchy(testId: string): Promise<TestPartsResponse> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
   const response = await fetch(
     `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests/${testId}/test-parts`,
     {
       headers: {
-        'Authorization': `Bearer ${API_CONFIG.JWT_TOKEN}`,
+        'Authorization': `Bearer ${token}`,
       },
     }
   );
@@ -54,12 +60,17 @@ export async function fetchTestHierarchy(testId: string): Promise<TestPartsRespo
 }
 
 export async function fetchItemDetails(itemId: string): Promise<ItemDetails> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
   console.log('Fetching item details for:', itemId);
   const response = await fetch(
     `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-items/${itemId}`,
     {
       headers: {
-        'Authorization': `Bearer ${API_CONFIG.JWT_TOKEN}`,
+        'Authorization': `Bearer ${token}`,
       },
     }
   );
