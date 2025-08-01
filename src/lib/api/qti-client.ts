@@ -1,5 +1,6 @@
 import { API_CONFIG } from '@/lib/config';
 import { getAuthToken } from '@/lib/auth/sso';
+import { authFetch } from './auth-fetch';
 
 interface TestPart {
   id: string;
@@ -63,18 +64,8 @@ interface AssessmentTestsResponse {
 }
 
 export async function fetchAssessmentTests(limit: number = 100, offset: number = 0): Promise<AssessmentTestsResponse> {
-  const token = getAuthToken();
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-
-  const response = await fetch(
-    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests?limit=${limit}&offset=${offset}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    }
+  const response = await authFetch(
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests?limit=${limit}&offset=${offset}`
   );
 
   if (!response.ok) {
@@ -85,18 +76,8 @@ export async function fetchAssessmentTests(limit: number = 100, offset: number =
 }
 
 export async function fetchTestHierarchy(testId: string): Promise<TestPartsResponse> {
-  const token = getAuthToken();
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-
-  const response = await fetch(
-    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests/${testId}/test-parts`,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    }
+  const response = await authFetch(
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-tests/${testId}/test-parts`
   );
 
   if (!response.ok) {
@@ -107,19 +88,9 @@ export async function fetchTestHierarchy(testId: string): Promise<TestPartsRespo
 }
 
 export async function fetchItemDetails(itemId: string): Promise<ItemDetails> {
-  const token = getAuthToken();
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-
   console.log('Fetching item details for:', itemId);
-  const response = await fetch(
-    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-items/${itemId}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    }
+  const response = await authFetch(
+    `${API_CONFIG.BASE_URL}${API_CONFIG.QTI_BASE_PATH}/assessment-items/${itemId}`
   );
 
   if (!response.ok) {

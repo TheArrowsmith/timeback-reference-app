@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { sso } from './sso';
+import { authEvents } from './auth-events';
 
 interface User {
   id: string;
@@ -37,9 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Set cookie for middleware
           document.cookie = `timeback_token=${token}; path=/; max-age=86400`;
         } else {
+          // Token is invalid or expired
+          console.log('Auth check failed, clearing token. Status:', response.status);
           setUser(null);
           sso.clearToken();
           document.cookie = 'timeback_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          
+          // If we get a 401, don't try SSO check, just stay logged out
+          if (response.status === 401) {
+            return;
+          }
         }
       } else {
         // Check for SSO session
@@ -54,6 +62,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Auth check failed:', error);
       setUser(null);
+      sso.clearToken();
+      document.cookie = 'timeback_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +100,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     checkAuth();
+    
+    // Listen for logout events from other tabs/windows or 401 responses
+    const unsubscribe = authEvents.onLogout(() => {
+      setUser(null);
+      setIsLoading(false);
+    });
+    
+    return unsubscribe;
   }, []);
 
   return (
