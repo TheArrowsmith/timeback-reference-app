@@ -92,10 +92,20 @@ echo "  -> Created Item with ID: $ITEM2_ID"
 
 # --- Step 3: Create the Assessment Test ---
 echo "3/6: Creating Assessment Test 'gauntlet_ai_quiz'..."
-TEST_PAYLOAD='{
+GAUNTLET_XML_PATH="$SCRIPT_DIR/gauntlet_ai_quiz.xml"
+if ! [ -f "$GAUNTLET_XML_PATH" ]; then
+    echo "Error: Cannot find required file: $GAUNTLET_XML_PATH" >&2
+    exit 1
+fi
+GAUNTLET_XML_ESCAPED=$(jq -sR . < "$GAUNTLET_XML_PATH")
+TEST_PAYLOAD=$(cat <<EOF
+{
   "identifier": "gauntlet_ai_quiz",
-  "title": "Gauntlet AI Quiz"
-}'
+  "title": "Gauntlet AI Quiz",
+  "xmlContent": ${GAUNTLET_XML_ESCAPED}
+}
+EOF
+)
 TEST_RESPONSE=$(api_call "POST" "/ims/qti/v3p0/assessment-tests" "$TEST_PAYLOAD")
 TEST_ID=$(echo "$TEST_RESPONSE" | jq -r '.test.id')
 echo "  -> Created Test with ID: $TEST_ID"
