@@ -1,6 +1,12 @@
 #!/bin/sh
 set -euo pipefail # Exit on error, unset variable, or pipe failure
 
+# --- Load environment variables from .env.local ---
+# Source .env.local if it exists to get JWT_TOKEN
+if [ -f ".env.local" ]; then
+  export $(grep -v '^#' .env.local | xargs)
+fi
+
 # --- Configuration ---
 # Use DOMAIN env var if set, otherwise default to localhost:8080
 API_URL="${DOMAIN:-http://localhost:8080}"

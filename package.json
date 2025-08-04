@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "cd node_modules/@timeback/sso-sdk && bun run build || true"
+    "postinstall": "cd node_modules/@timeback/sso-sdk && bun run build || true",
+    "getlogintoken": "bun scripts/get-login-token.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.859.0",
@@ -31,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
     "tailwindcss": "^4",
