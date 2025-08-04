@@ -1,8 +1,9 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { sso } from './sso';
+import { sso, setAuthToken } from './sso';
 import { authEvents } from './auth-events';
+import { type CognitoTokens, getStoredTokens, clearTokens as clearCognitoTokens } from './cognito';
 
 interface User {
   id: string;
@@ -16,6 +17,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  setCognitoAuth: (tokens: CognitoTokens) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
@@ -29,6 +31,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async () => {
     setIsLoading(true);
     try {
+      // First check for Cognito tokens
+      const cognitoTokens = getStoredTokens();
+      if (cognitoTokens) {
+        // Use Cognito access token with SSO SDK
+        setAuthToken(cognitoTokens.accessToken);
+        const response = await sso.request('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.data.user);
+          // Set cookie for middleware
+          document.cookie = `timeback_token=${cognitoTokens.accessToken}; path=/; max-age=86400`;
+          return;
+        } else if (response.status === 401) {
+          // Token might be expired, will be handled by auth-fetch with refresh
+          console.log('Auth check failed with 401, token might be expired');
+          setUser(null);
+          document.cookie = 'timeback_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          return;
+        }
+      }
+      
+      // Fallback to SSO SDK token check
       const token = sso.getToken();
       if (token) {
         const response = await sso.request('/api/auth/me');
@@ -63,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Auth check failed:', error);
       setUser(null);
       sso.clearToken();
+      clearCognitoTokens();
       document.cookie = 'timeback_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     } finally {
       setIsLoading(false);
@@ -87,10 +112,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setCognitoAuth = async (tokens: CognitoTokens) => {
+    try {
+      // Set the token in SSO SDK
+      setAuthToken(tokens.accessToken);
+      
+      // Try to get user info
+      const response = await sso.request('/api/auth/me');
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.data.user);
+        // Set cookie for middleware
+        document.cookie = `timeback_token=${tokens.accessToken}; path=/; max-age=86400`;
+      } else {
+        throw new Error('Failed to get user info');
+      }
+    } catch (error) {
+      console.error('Failed to set Cognito auth:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await sso.logout();
       setUser(null);
+      // Clear Cognito tokens
+      clearCognitoTokens();
       // Clear cookie for middleware
       document.cookie = 'timeback_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     } catch (error) {
@@ -117,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isAuthenticated: !!user,
         login,
+        setCognitoAuth,
         logout,
         checkAuth,
       }}

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication App</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1513.0.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .hidden {
+            display: none;
+        }
+        .token-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .token-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            background-color: white;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .copy-button {
+            background-color: #007bff;
+            margin-top: 10px;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+        }
+        .step.active {
+            border-color: #4CAF50;
+            background-color: #f8fff9;
+        }
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Authentication App</h1>
+        
+        <!-- Step 1: Email Registration -->
+        <div id="step1" class="step active">
+            <div class="step-title">Step 1: Register Account</div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <button id="registerBtn" onclick="register()">Register & Send Code</button>
+            <div class="status info">Password is set to: TestPassword123!</div>
+        </div>
+
+        <!-- Step 2: Confirmation -->
+        <div id="step2" class="step hidden">
+            <div class="step-title">Step 2: Confirm Account</div>
+            <div class="form-group">
+                <label for="confirmCode">6-Digit Confirmation Code:</label>
+                <input type="text" id="confirmCode" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+            </div>
+            <button id="confirmBtn" onclick="confirm()">Confirm & Login</button>
+        </div>
+
+        <!-- Step 3: Token Display -->
+        <div id="step3" class="step hidden">
+            <div class="step-title">Step 3: Your Auth Token</div>
+            <div class="token-container">
+                <label>Access Token:</label>
+                <textarea id="tokenField" class="token-field" readonly></textarea>
+                <button class="copy-button" onclick="copyToken()">📋 Copy Token</button>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" class="status hidden"></div>
+    </div>
+
+    <script>
+        // Configure AWS SDK
+        AWS.config.region = 'us-east-1';
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: 'dummy' // Not needed for unauthenticated Cognito operations
+        });
+
+        // Cognito Configuration
+        const COGNITO_CONFIG = {
+            UserPoolId: 'us-east-1_Bzhz5PGqq',
+            ClientId: '4i6vie24a9jp2hthaiuf1emh9k'
+        };
+
+        const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+        const PASSWORD = 'TestPassword123!';
+        let currentEmail = '';
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.classList.remove('hidden');
+            
+            // Hide status after 5 seconds
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.add('hidden');
+                step.classList.remove('active');
+            });
+            
+            // Show the requested step
+            const step = document.getElementById(`step${stepNumber}`);
+            step.classList.remove('hidden');
+            step.classList.add('active');
+        }
+
+        async function register() {
+            const email = document.getElementById('email').value.trim();
+            
+            if (!email) {
+                showStatus('Please enter an email address', 'error');
+                return;
+            }
+
+            currentEmail = email;
+            document.getElementById('registerBtn').disabled = true;
+            showStatus('Registering user...', 'info');
+
+            const params = {
+                ClientId: COGNITO_CONFIG.ClientId,
+                Username: email,
+                Password: PASSWORD,
+                UserAttributes: [
+                    { Name: 'email', Value: email },
+                    { Name: 'name', Value: 'Test User' }
+                ]
+            };
+
+            try {
+                await cognitoIdentityServiceProvider.signUp(params).promise();
+                showStatus('✅ Registration successful! Check your email for the verification code.', 'success');
+                showStep(2);
+                document.getElementById('confirmCode').focus();
+            } catch (error) {
+                if (error.code === 'UsernameExistsException') {
+                    showStatus('User already exists. Moving to confirmation step...', 'info');
+                    showStep(2);
+                    document.getElementById('confirmCode').focus();
+                } else {
+                    showStatus(`Registration error: ${error.message}`, 'error');
+                    document.getElementById('registerBtn').disabled = false;
+                }
+            }
+        }
+
+        async function confirm() {
+            const code = document.getElementById('confirmCode').value.trim();
+            
+            if (!code || code.length !== 6) {
+                showStatus('Please enter a 6-digit code', 'error');
+                return;
+            }
+
+            document.getElementById('confirmBtn').disabled = true;
+            showStatus('Confirming account...', 'info');
+
+            const confirmParams = {
+                ClientId: COGNITO_CONFIG.ClientId,
+                Username: currentEmail,
+                ConfirmationCode: code
+            };
+
+            try {
+                await cognitoIdentityServiceProvider.confirmSignUp(confirmParams).promise();
+                showStatus('✅ Account confirmed! Logging in...', 'success');
+                
+                // Automatically login after confirmation
+                await login();
+            } catch (error) {
+                if (error.code === 'NotAuthorizedException' && error.message.includes('already confirmed')) {
+                    showStatus('Account already confirmed. Logging in...', 'info');
+                    await login();
+                } else {
+                    showStatus(`Confirmation error: ${error.message}`, 'error');
+                    document.getElementById('confirmBtn').disabled = false;
+                }
+            }
+        }
+
+        async function login() {
+            const authParams = {
+                AuthFlow: 'USER_PASSWORD_AUTH',
+                ClientId: COGNITO_CONFIG.ClientId,
+                AuthParameters: {
+                    USERNAME: currentEmail,
+                    PASSWORD: PASSWORD
+                }
+            };
+
+            try {
+                const response = await cognitoIdentityServiceProvider.initiateAuth(authParams).promise();
+                
+                if (response.AuthenticationResult) {
+                    const { AccessToken, IdToken, RefreshToken } = response.AuthenticationResult;
+                    
+                    showStatus('✅ Login successful!', 'success');
+                    showStep(3);
+                    
+                    // Display the access token
+                    document.getElementById('tokenField').value = AccessToken;
+                    
+                    // Store tokens in localStorage for reference
+                    localStorage.setItem('accessToken', AccessToken);
+                    localStorage.setItem('idToken', IdToken);
+                    localStorage.setItem('refreshToken', RefreshToken);
+                }
+            } catch (error) {
+                showStatus(`Login error: ${error.message}`, 'error');
+                document.getElementById('confirmBtn').disabled = false;
+            }
+        }
+
+        function copyToken() {
+            const tokenField = document.getElementById('tokenField');
+            tokenField.select();
+            tokenField.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                showStatus('✅ Token copied to clipboard!', 'success');
+                
+                // Visual feedback
+                const copyBtn = document.querySelector('.copy-button');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                showStatus('Failed to copy token', 'error');
+            }
+        }
+
+        // Allow Enter key to submit in email field
+        document.getElementById('email').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                register();
+            }
+        });
+
+        // Allow Enter key to submit in confirmation code field
+        document.getElementById('confirmCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                confirm();
+            }
+        });
+
+        // Auto-focus email field on load
+        window.onload = function() {
+            document.getElementById('email').focus();
+        };
+    </script>
+</body>
+</html>
