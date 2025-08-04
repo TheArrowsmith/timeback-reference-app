@@ -159,6 +159,10 @@
                 <label>Access Token:</label>
                 <textarea id="tokenField" class="token-field" readonly></textarea>
                 <button class="copy-button" onclick="copyToken()">📋 Copy Token</button>
+                <button class="copy-button" onclick="copyTokenAsExport()">📋 Copy as Export Command</button>
+                <div class="status info" style="margin-top: 15px; font-size: 14px;">
+                    <strong>Tip:</strong> Use "Copy as Export Command" to get the token in a format ready to paste into your .zshrc/.bashrc file. Don't forget to run <code>source ~/.zshrc</code> or <code>source ~/.bashrc</code> after adding it!
+                </div>
             </div>
         </div>
 
@@ -332,6 +336,39 @@
                 }, 2000);
             } catch (err) {
                 showStatus('Failed to copy token', 'error');
+            }
+        }
+
+        function copyTokenAsExport() {
+            const token = document.getElementById('tokenField').value;
+            const exportCommand = `export JWT_TOKEN="${token}"`;
+            
+            // Create a temporary textarea to copy from
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = exportCommand;
+            tempTextarea.style.position = 'absolute';
+            tempTextarea.style.left = '-9999px';
+            document.body.appendChild(tempTextarea);
+            
+            tempTextarea.select();
+            tempTextarea.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                showStatus('✅ Export command copied to clipboard! Paste it into your .zshrc/.bashrc file.', 'success');
+                
+                // Visual feedback
+                const copyBtns = document.querySelectorAll('.copy-button');
+                const exportBtn = copyBtns[1]; // Second button
+                const originalText = exportBtn.textContent;
+                exportBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    exportBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                showStatus('Failed to copy export command', 'error');
+            } finally {
+                document.body.removeChild(tempTextarea);
             }
         }
 
