@@ -20,6 +20,8 @@ If you're running a local copy of TimeBack you'll need to add data
 ### Step 1: set up the backend and register
 
 1. Clone the Timeback repo (it's a separate, private repository — ask AJ to add you)
+1a. **Make sure you have the environment variables set in that project from the google doc that's pinned in the #alpha-school-apps slack channel**
+
 2. Follow the instructions in that repo to set the app up.
 2. Create an account and login:
 
