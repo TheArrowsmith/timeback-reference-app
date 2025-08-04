@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
-                identifier="gauntlet_ai_quiz"
-                title="Gauntlet AI Quiz">
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
+                     identifier="gauntlet_ai_quiz"
+                     title="Gauntlet AI Quiz">
     
-    <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
-        <defaultValue>
-            <value>0</value>
-        </defaultValue>
-    </outcomeDeclaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" baseType="float">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
     
-    <testPart identifier="testPart1" navigationMode="linear" submissionMode="individual">
-        <assessmentSection identifier="section1" title="Quiz Questions" visible="true">
+    <qti-test-part identifier="testPart1" navigationMode="linear" submissionMode="individual">
+        <qti-assessment-section identifier="section1" title="Quiz Questions" visible="true">
             
             <!-- Question 1: Multiple Choice -->
-            <assessmentItemRef identifier="q1_multiple_choice" href="q1_multiple_choice.xml"/>
+            <qti-assessment-item-ref identifier="q1_multiple_choice" href="q1_multiple_choice.xml"/>
             
             <!-- Question 2: Free Text Input -->
-            <assessmentItemRef identifier="q2_free_text" href="q2_free_text.xml"/>
+            <qti-assessment-item-ref identifier="q2_free_text" href="q2_free_text.xml"/>
             
-        </assessmentSection>
-    </testPart>
+        </qti-assessment-section>
+    </qti-test-part>
     
-    <outcomeProcessing>
-        <setOutcomeValue identifier="SCORE">
-            <sum>
-                <testVariables variableIdentifier="SCORE"/>
-            </sum>
-        </setOutcomeValue>
-    </outcomeProcessing>
-</assessmentTest>
+    <qti-outcome-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-sum>
+                <qti-test-variables variableIdentifier="SCORE"/>
+            </qti-sum>
+        </qti-set-outcome-value>
+    </qti-outcome-processing>
+</qti-assessment-test>

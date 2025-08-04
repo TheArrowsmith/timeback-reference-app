@@ -1,33 +1,33 @@
 <!-- Question 1: Multiple Choice Question -->
-<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
-                identifier="q1_multiple_choice"
-                title="Gauntlet AI Location"
-                adaptive="false"
-                timeDependent="false">
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
+                     identifier="q1_multiple_choice"
+                     title="Gauntlet AI Location"
+                     adaptive="false"
+                     timeDependent="false">
     
-    <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
-        <correctResponse>
-            <value>choice_austin</value>
-        </correctResponse>
-    </responseDeclaration>
+    <qti-response-declaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+        <qti-correct-response>
+            <qti-value>choice_austin</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
     
-    <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
-        <defaultValue>
-            <value>0</value>
-        </defaultValue>
-    </outcomeDeclaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" baseType="float">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
     
-    <itemBody>
+    <qti-item-body>
         <div>
             <p>What city is Gauntlet AI based in?</p>
-            <choiceInteraction responseIdentifier="RESPONSE" shuffle="false" maxChoices="1">
-                <simpleChoice identifier="choice_austin">Austin, Texas</simpleChoice>
-                <simpleChoice identifier="choice_paris">Paris, France</simpleChoice>
-            </choiceInteraction>
+            <qti-choice-interaction responseIdentifier="RESPONSE" shuffle="false" maxChoices="1">
+                <qti-simple-choice identifier="choice_austin">Austin, Texas</qti-simple-choice>
+                <qti-simple-choice identifier="choice_paris">Paris, France</qti-simple-choice>
+            </qti-choice-interaction>
         </div>
-    </itemBody>
+    </qti-item-body>
     
-    <responseProcessing template="http://www.imsglobal.org/question/qti_v2p2/rptemplates/match_correct"/>
-</assessmentItem>
+    <qti-response-processing template="http://www.imsglobal.org/question/qti_v2p2/rptemplates/match_correct"/>
+</qti-assessment-item>

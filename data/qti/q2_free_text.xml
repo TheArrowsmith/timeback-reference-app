@@ -1,67 +1,67 @@
 <!-- Question 2: Free Text Input Question -->
-<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
-                identifier="q2_free_text"
-                title="Austen's Last Name"
-                adaptive="false"
-                timeDependent="false">
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd"
+                     identifier="q2_free_text"
+                     title="Austen's Last Name"
+                     adaptive="false"
+                     timeDependent="false">
     
-    <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="string">
-        <correctResponse>
-            <value>Allred</value>
-        </correctResponse>
-        <mapping defaultValue="0">
-            <mapEntry mapKey="Allred" mappedValue="1"/>
-            <mapEntry mapKey="allred" mappedValue="1"/>
-            <mapEntry mapKey="ALLRED" mappedValue="1"/>
-        </mapping>
-    </responseDeclaration>
+    <qti-response-declaration identifier="RESPONSE" cardinality="single" baseType="string">
+        <qti-correct-response>
+            <qti-value>Allred</qti-value>
+        </qti-correct-response>
+        <qti-mapping defaultValue="0">
+            <qti-map-entry mapKey="Allred" mappedValue="1"/>
+            <qti-map-entry mapKey="allred" mappedValue="1"/>
+            <qti-map-entry mapKey="ALLRED" mappedValue="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
     
-    <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
-        <defaultValue>
-            <value>0</value>
-        </defaultValue>
-    </outcomeDeclaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" baseType="float">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
     
-    <itemBody>
+    <qti-item-body>
         <div>
             <p>What's Austen's last name?</p>
-            <textEntryInteraction responseIdentifier="RESPONSE" expectedLength="20"/>
+            <qti-text-entry-interaction responseIdentifier="RESPONSE" expectedLength="20"/>
         </div>
-    </itemBody>
+    </qti-item-body>
     
-    <responseProcessing>
-        <responseCondition>
-            <responseIf>
-                <match>
-                    <variable identifier="RESPONSE"/>
-                    <correct identifier="RESPONSE"/>
-                </match>
-                <setOutcomeValue identifier="SCORE">
-                    <baseValue baseType="float">1</baseValue>
-                </setOutcomeValue>
-            </responseIf>
-            <responseElseIf>
-                <or>
-                    <match>
-                        <variable identifier="RESPONSE"/>
-                        <baseValue baseType="string">allred</baseValue>
-                    </match>
-                    <match>
-                        <variable identifier="RESPONSE"/>
-                        <baseValue baseType="string">ALLRED</baseValue>
-                    </match>
-                </or>
-                <setOutcomeValue identifier="SCORE">
-                    <baseValue baseType="float">1</baseValue>
-                </setOutcomeValue>
-            </responseElseIf>
-            <responseElse>
-                <setOutcomeValue identifier="SCORE">
-                    <baseValue baseType="float">0</baseValue>
-                </setOutcomeValue>
-            </responseElse>
-        </responseCondition>
-    </responseProcessing>
-</assessmentItem>
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="RESPONSE"/>
+                    <qti-correct identifier="RESPONSE"/>
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value baseType="float">1</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else-if>
+                <qti-or>
+                    <qti-match>
+                        <qti-variable identifier="RESPONSE"/>
+                        <qti-base-value baseType="string">allred</qti-base-value>
+                    </qti-match>
+                    <qti-match>
+                        <qti-variable identifier="RESPONSE"/>
+                        <qti-base-value baseType="string">ALLRED</qti-base-value>
+                    </qti-match>
+                </qti-or>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value baseType="float">1</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-else-if>
+            <qti-response-else>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value baseType="float">0</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-else>
+        </qti-response-condition>
+    </qti-response-processing>
+</qti-assessment-item>
