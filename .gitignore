@@ -31,7 +31,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.development
+.env.production
+# .env.local is allowed for this public reference app since it only contains public Cognito IDs
 
 # vercel
 .vercel
@@ -40,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.specstory
+repomix-output*

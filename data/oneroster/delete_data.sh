@@ -20,6 +20,12 @@
 #
 # ==============================================================================
 
+# --- Load environment variables from .env.local ---
+# Source .env.local if it exists to get JWT_TOKEN
+if [ -f ".env.local" ]; then
+  export $(grep -v '^#' .env.local | xargs)
+fi
+
 # --- Configuration and Setup ---
 
 # Exit immediately if a command exits with a non-zero status.
